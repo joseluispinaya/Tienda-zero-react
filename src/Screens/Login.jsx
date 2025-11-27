@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { saveAuth } from "../Store/authStore";
 
 const Login = () => {
 
@@ -24,10 +25,15 @@ const Login = () => {
                 clave: clave
             });
 
-            const { token } = response.data;
+
+            const { token, usuarioResp } = response.data;
+
+            saveAuth(token, usuarioResp);
+            
+            //const { token } = response.data;
 
             // Guarda el token JWT
-            localStorage.setItem("token", token);
+            //localStorage.setItem("token", token);
 
             Swal.fire({
                 title: "Bienvenido",
