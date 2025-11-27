@@ -19,7 +19,7 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post("https://localhost:7111/api/Acceso/CrearToken", {
+            const response = await axios.post("https://localhost:7111/api/Acceso/LogeoApp", {
                 correo: correo,
                 clave: clave
             });
