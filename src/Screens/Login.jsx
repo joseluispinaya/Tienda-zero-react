@@ -2,12 +2,15 @@ import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { saveAuth } from "../Store/authStore";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
     const [correo, setCorreo] = useState("");
     const [clave, setClave] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -25,11 +28,12 @@ const Login = () => {
                 clave: clave
             });
 
+            console.log(response.data);
 
             const { token, usuarioResp } = response.data;
 
             saveAuth(token, usuarioResp);
-            
+
             //const { token } = response.data;
 
             // Guarda el token JWT
@@ -44,12 +48,12 @@ const Login = () => {
             });
 
             // Redirigir según tu router
-            // navigate("/dashboard");
+            navigate("/");
 
         } catch (error) {
             console.log(error);
 
-            if (error.response?.status === 401) {
+            if (error.response?.status === 400) {
                 Swal.fire("Credenciales incorrectas", "Correo o contraseña inválidos", "error");
             } else {
                 Swal.fire("Error", "No se pudo conectar con el servidor", "error");
