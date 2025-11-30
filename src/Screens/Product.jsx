@@ -181,7 +181,7 @@ const Product = () => {
                     </tbody>
                 </table>
             </DivTable>
-            <ModalAdd title={title} modal="modalProductos">
+            <ModalAdd title={title} modal="modalProductos" size="modal-lg">
                 <div className="modal-body">
                     <form onSubmit={save}>
                         <div className="row">
@@ -194,7 +194,7 @@ const Product = () => {
                                 <div className="input-group input-group-sm mb-3">
                                     <span className="input-group-text">Categorías</span>
                                     <select
-                                        className="form-control"
+                                        className="form-select"
                                         value={idCategoria}
                                         onChange={(e) => setIdCategoria(e.target.value)}
                                     >

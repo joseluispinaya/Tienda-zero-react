@@ -1,9 +1,9 @@
 import React from 'react'
 
-const ModalAdd = ({ children, title, modal }) => {
+const ModalAdd = ({ children, title, modal, size = "" }) => {
     return (
         <div className="modal fade" id={modal} tabIndex="-1" aria-labelledby={`${modal}Label`} aria-hidden="true">
-            <div className="modal-dialog modal-lg modal-dialog-centered">
+            <div className={`modal-dialog ${size} modal-dialog-centered`}>
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title" id={`${modal}Label`}>{title}</h5>

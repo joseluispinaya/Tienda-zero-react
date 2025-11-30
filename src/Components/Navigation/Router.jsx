@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from '../../Screens/Home.jsx'
+import Categoria from '../../Screens/Categoria.jsx';
 import Product from '../../Screens/Product.jsx'
 import About from '../../Screens/About.jsx'
 import Login from '../../Screens/Login.jsx';
@@ -21,6 +22,15 @@ const Router = () => {
                 element={
                     <ProtectedRoute>
                         <Home />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="categorias"
+                element={
+                    <ProtectedRoute>
+                        <Categoria />
                     </ProtectedRoute>
                 }
             />

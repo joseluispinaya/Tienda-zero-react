@@ -45,6 +45,10 @@ const Navigator = () => {
                             </li>
 
                             <li className="nav-item">
+                                <Link to="/categorias" className="nav-link">Categorias</Link>
+                            </li>
+
+                            <li className="nav-item">
                                 <Link to="/products" className="nav-link">Productos</Link>
                             </li>
 
