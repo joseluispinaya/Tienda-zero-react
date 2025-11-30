@@ -1,20 +1,23 @@
 import React, { useEffect, useState, useRef } from 'react';
+import DataTable from "react-data-table-component";
 import DivAdd from "../Components/Forms/DivAdd";
-import DivTable from "../Components/Forms/DivTable";
+import DivConten from "../Components/Forms/DivConten";
+//import DivTable from "../Components/Forms/DivTable";
 import ModalAdd from "../Components/Modals/ModalAdd";
 import { categoriasApi } from "../Api/categoriasApi";
 import { showAlert, showToast } from "../Utils/alertUtils";
 
 const Categoria = () => {
     const [categorias, setCategorias] = useState([]);
+    const [filtered, setFiltered] = useState([]); // para el buscador
 
     const [idCategoria, setIdCategoria] = useState(0);
     const [nombre, setNombre] = useState("");
     const [activo, setActivo] = useState(true);
 
     const [operation, setOperation] = useState(1); // 1=registrar, 2=editar
-    const [classLoad, setClassLoad] = useState("");
-    const [classTable, setClassTable] = useState("d-none");
+    //const [classLoad, setClassLoad] = useState("");
+    //const [classTable, setClassTable] = useState("d-none");
     const [title, setTitle] = useState("");
 
     const close = useRef();
@@ -25,10 +28,10 @@ const Categoria = () => {
 
     const getCategorias = async () => {
         const data = await categoriasApi.listar();
-        console.log(data);
         setCategorias(data);
-        setClassTable('');
-        setClassLoad('d-none');
+        //setClassTable('');
+        //setClassLoad('d-none');
+        setFiltered(data); // copia inicial del listado para búsqueda
     };
 
     const clear = () => {
@@ -45,7 +48,6 @@ const Categoria = () => {
             setTitle("Registrar categoria");
         } else {
             setTitle("Editar categoria");
-            console.log(catego);
 
             setIdCategoria(catego.idCategoria);
             setNombre(catego.nombre);
@@ -57,19 +59,11 @@ const Categoria = () => {
         e.preventDefault();
 
         if (!nombre.trim()) {
-            //showAlert("Alerta", "Ingrese un nombre", "warning");
             showToast("Ingrese un nombre", "error");
-            //showToast("Producto agregado");
-            //showToast("Ingrese un nombre", "error", "bottom-end");
-            //showToast("Ingrese un nombre", "error");
             return;
         }
 
-        const objeto = {
-            idCategoria,
-            nombre,
-            activo,
-        };
+        const objeto = { idCategoria, nombre, activo };
 
         let response;
 
@@ -88,6 +82,60 @@ const Categoria = () => {
         }
     };
 
+    // Búsqueda en tabla
+    const onSearch = (text) => {
+        if (!text) {
+            setFiltered(categorias);
+            return;
+        }
+
+        const result = categorias.filter((item) =>
+            item.nombre.toLowerCase().includes(text.toLowerCase())
+        );
+
+        setFiltered(result);
+    };
+
+    // Columnas de la tabla
+    const columns = [
+        {
+            name: "#",
+            selector: (row, index) => index + 1,
+            width: "70px",
+        },
+        {
+            name: "Nombre",
+            selector: (row) => row.nombre,
+            sortable: true,
+        },
+        {
+            name: "Estado",
+            cell: (row) => (
+                <span
+                    className={`badge ${row.activo ? "bg-success" : "bg-danger"
+                        }`}
+                >
+                    {row.activo ? "Activo" : "Inactivo"}
+                </span>
+            ),
+            width: "150px",
+        },
+        {
+            name: "Acciones",
+            cell: (row) => (
+                <button
+                    className="btn btn-warning btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalCategoria"
+                    onClick={() => openModal(2, row)}
+                >
+                    <i className="fa-solid fa-edit"></i>
+                </button>
+            ),
+            width: "120px",
+        },
+    ];
+
     return (
         <div className="container-fluid">
             <DivAdd>
@@ -96,39 +144,36 @@ const Categoria = () => {
                     <i className="fa-solid fa-circle-plus"></i> Nuevo Registro
                 </button>
             </DivAdd>
-            <DivTable col="6" off="3" classLoad={classLoad} classTable={classTable}>
-                <table className="table table-bordered">
-                    <thead><tr>
-                        <th>#</th>
-                        <th>Nombre</th>
-                        <th>Estado</th>
-                        <th></th>
-                    </tr></thead>
-                    <tbody className="table-group-divider">
-                        {categorias.map((row, i) => (
-                            <tr key={row.idCategoria}>
-                                <td>{(i + 1)}</td>
-                                <td>{row.nombre}</td>
-                                <td>
-                                    <span className={`badge ${row.activo ? "bg-success" : "bg-danger"}`}>
-                                        {row.activo ? "Activo" : "Inactivo"}
-                                    </span>
-                                </td>
-                                <td>
-                                    <button
-                                        className="btn btn-warning btn-sm me-2"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalCategoria"
-                                        onClick={() => openModal(2, row)}
-                                    >
-                                        <i className="fa-solid fa-edit"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </DivTable>
+            <DivConten col="6" off="3">
+                <div className="card">
+                    <div className="card-header">
+                        Categorias Registradas
+                    </div>
+                    <div className="card-body">
+                        <div className="d-grid col-8 mx-auto">
+                            <div className="input-group input-group-sm mb-3">
+                                <span className="input-group-text">
+                                    <i className="fa-solid fa-search"></i>
+                                </span>
+                                <input
+                                    type="text"
+                                    placeholder="Buscar..."
+                                    className="form-control"
+                                    onChange={(e) => onSearch(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <DataTable
+                            columns={columns}
+                            data={filtered}
+                            pagination
+                            highlightOnHover
+                            dense
+                            noDataComponent="No hay categorías registradas"
+                        />
+                    </div>
+                </div>
+            </DivConten>
             <ModalAdd title={title} modal="modalCategoria" size="modal-sm">
                 <div className="modal-body">
                     <form onSubmit={save}>
