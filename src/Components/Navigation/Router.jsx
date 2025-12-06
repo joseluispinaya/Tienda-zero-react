@@ -3,6 +3,7 @@ import Home from '../../Screens/Home.jsx'
 import Categoria from '../../Screens/Categoria.jsx';
 import Product from '../../Screens/Product.jsx'
 import About from '../../Screens/About.jsx'
+import Inicio from '../../Screens/Inicio.jsx';
 import Login from '../../Screens/Login.jsx';
 import ProtectedRoute from "../ProtectedRoute.jsx";
 
@@ -14,6 +15,7 @@ const Router = () => {
         <Routes>
 
             {/* RUTA LOGIN (PÚBLICA) */}
+            <Route path="/inicio" element={<Inicio />} />
             <Route path="/login" element={<Login />} />
 
             {/* RUTAS PROTEGIDAS */}
