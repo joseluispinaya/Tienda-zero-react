@@ -5,6 +5,7 @@ import DivConten from "../Components/Forms/DivConten";
 //import DivTable from "../Components/Forms/DivTable";
 import ModalAdd from "../Components/Modals/ModalAdd";
 import { categoriasApi } from "../Api/categoriasApi";
+import { exportToExcel, exportToPDF } from "../Utils/exportUtils";
 import { showAlert, showToast } from "../Utils/alertUtils";
 
 const Categoria = () => {
@@ -150,17 +151,35 @@ const Categoria = () => {
                         Categorias Registradas
                     </div>
                     <div className="card-body">
-                        <div className="d-grid col-8 mx-auto">
-                            <div className="input-group input-group-sm mb-3">
-                                <span className="input-group-text">
-                                    <i className="fa-solid fa-search"></i>
-                                </span>
-                                <input
-                                    type="text"
-                                    placeholder="Buscar..."
-                                    className="form-control"
-                                    onChange={(e) => onSearch(e.target.value)}
-                                />
+                        <div className="row text-center mb-3">
+                            <div className="col-md-3">
+                                <button
+                                    className="btn btn-success btn-sm"
+                                    onClick={() => exportToExcel(categorias, "Categorias")}
+                                >
+                                    <i className="fa-solid fa-file-excel"></i> Excel
+                                </button>
+                            </div>
+                            <div className="col-md-3">
+                                <button
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => exportToPDF(columns, categorias, "Categorias")}
+                                >
+                                    <i className="fa-solid fa-file-pdf"></i> PDF
+                                </button>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="input-group input-group-sm">
+                                    <span className="input-group-text">
+                                        <i className="fa-solid fa-search"></i>
+                                    </span>
+                                    <input
+                                        type="text"
+                                        placeholder="Buscar..."
+                                        className="form-control"
+                                        onChange={(e) => onSearch(e.target.value)}
+                                    />
+                                </div>
                             </div>
                         </div>
                         <DataTable
